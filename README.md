@@ -70,6 +70,18 @@ User Query (plain English)
 
 ---
 
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| UI | Streamlit |
+| LLM inference | Groq (`llama-3.3-70b-versatile`) |
+| Graph algorithm | Custom BFS with field-name scoring |
+| Visualisation | Graphviz (`python-graphviz`) |
+| Tool catalogues | JSON (GitHub REST API + Google Workspace API) |
+
+
 ## Planning Engine — BFS + LLM Hybrid
 
 This is the core of the system. Two strategies work together:
@@ -126,6 +138,14 @@ score += 1  if keyword in tool produces_candidates
 
 Tools that introduce create/delete/send actions are suppressed unless the user's query explicitly contains those verbs — preventing `CREATE_REPOSITORY` from appearing in a "create issue" chain.
 
+---
+## User Flow for Dependency Map Generation
+<img width="1500" height="723" alt="Home Page" src="https://github.com/user-attachments/assets/b4e6e2b6-3fe3-41d9-acf4-9a86982d1c5b" />
+<img width="1438" height="769" alt="GitHub Planner Flow" src="https://github.com/user-attachments/assets/6a3bb8aa-b9d2-49ec-8ac9-75526522a5bb" />
+<img width="1438" height="769" alt="GitHub Dependency Mapping" src="https://github.com/user-attachments/assets/e9d7eac9-1254-445a-8d93-ecd7550bb402" />
+<img width="1438" height="568" alt="Google Dependency User Input" src="https://github.com/user-attachments/assets/42ba8582-d2bf-4c87-a3a2-71f9c1f8f85b" />
+<img width="1438" height="512" alt="Google Dependency Chain" src="https://github.com/user-attachments/assets/24a340fe-23a7-4cf4-9e02-7690e3ad7317" />
+<img width="1438" height="769" alt="BFS Chains then LLM picks up the best" src="https://github.com/user-attachments/assets/aa61cb06-47db-4a17-9c3a-62cf184851ac" />
 ---
 
 ## Dependency Graph Visualization (`graph.py`)
@@ -229,18 +249,6 @@ streamlit run app.py
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| UI | Streamlit |
-| LLM inference | Groq (`llama-3.3-70b-versatile`) |
-| Graph algorithm | Custom BFS with field-name scoring |
-| Visualisation | Graphviz (`python-graphviz`) |
-| Tool catalogues | JSON (GitHub REST API + Google Workspace API) |
-
----
-
 ## Design Decisions
 
 **Why BFS first, LLM second?**
@@ -254,15 +262,3 @@ Running BFS on all 500+ tools generates a graph with thousands of weak edges and
 
 **Why Graphviz over a JS library?**
 Streamlit's iframe sandbox blocks CDN-loaded JS libraries (vis-network, d3) at runtime. Graphviz renders to SVG natively via `st.graphviz_chart` with no network dependency.
-
-## UI Flow
-<img width="1500" height="723" alt="Home Page" src="https://github.com/user-attachments/assets/b4e6e2b6-3fe3-41d9-acf4-9a86982d1c5b" />
-<img width="1438" height="769" alt="GitHub Planner Flow" src="https://github.com/user-attachments/assets/6a3bb8aa-b9d2-49ec-8ac9-75526522a5bb" />
-<img width="1438" height="769" alt="GitHub Dependency Mapping" src="https://github.com/user-attachments/assets/e9d7eac9-1254-445a-8d93-ecd7550bb402" />
-<img width="1438" height="568" alt="Google Dependency User Input" src="https://github.com/user-attachments/assets/42ba8582-d2bf-4c87-a3a2-71f9c1f8f85b" />
-<img width="1438" height="512" alt="Google Dependency Chain" src="https://github.com/user-attachments/assets/24a340fe-23a7-4cf4-9e02-7690e3ad7317" />
-<img width="1438" height="769" alt="BFS Chains then LLM picks up the best" src="https://github.com/user-attachments/assets/aa61cb06-47db-4a17-9c3a-62cf184851ac" />
-
-
-
-
