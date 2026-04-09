@@ -70,6 +70,18 @@ User Query (plain English)
 
 ---
 
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| UI | Streamlit |
+| LLM inference | Groq (`llama-3.3-70b-versatile`) |
+| Graph algorithm | Custom BFS with field-name scoring |
+| Visualisation | Graphviz (`python-graphviz`) |
+| Tool catalogues | JSON (GitHub REST API + Google Workspace API) |
+
+
 ## Planning Engine — BFS + LLM Hybrid
 
 This is the core of the system. Two strategies work together:
@@ -127,6 +139,14 @@ score += 1  if keyword in tool produces_candidates
 Tools that introduce create/delete/send actions are suppressed unless the user's query explicitly contains those verbs — preventing `CREATE_REPOSITORY` from appearing in a "create issue" chain.
 
 ---
+## User Flow for Dependency Map Generation
+<img width="1500" height="723" alt="Home Page" src="https://github.com/user-attachments/assets/b4e6e2b6-3fe3-41d9-acf4-9a86982d1c5b" />
+<img width="1438" height="769" alt="GitHub Planner Flow" src="https://github.com/user-attachments/assets/6a3bb8aa-b9d2-49ec-8ac9-75526522a5bb" />
+<img width="1438" height="769" alt="GitHub Dependency Mapping" src="https://github.com/user-attachments/assets/e9d7eac9-1254-445a-8d93-ecd7550bb402" />
+<img width="1438" height="568" alt="Google Dependency User Input" src="https://github.com/user-attachments/assets/42ba8582-d2bf-4c87-a3a2-71f9c1f8f85b" />
+<img width="1438" height="512" alt="Google Dependency Chain" src="https://github.com/user-attachments/assets/24a340fe-23a7-4cf4-9e02-7690e3ad7317" />
+<img width="1438" height="769" alt="BFS Chains then LLM picks up the best" src="https://github.com/user-attachments/assets/aa61cb06-47db-4a17-9c3a-62cf184851ac" />
+---
 
 ## Dependency Graph Visualization (`graph.py`)
 
@@ -152,13 +172,13 @@ Each tool node shows its short name and the fields it produces, color-coded by s
 ## File Structure
 
 ```
-├── app.py            Entry point — routing and orchestration only (~70 lines)
-├── tools.py          Tool loading, intent maps, keyword_filter, analyze_chain
-├── dependency.py     BFS graph builder — pure data-driven chain discovery
-├── planner.py        Groq LLM — rank_plan() and llm_plan()
-├── graph.py          Graphviz dependency visualisation
-├── ui.py             Streamlit UI components (landing, header, results)
-└── styles.py         All CSS + SVG logos — zero logic
+├── app.py            
+├── tools.py          
+├── dependency.py     
+├── planner.py        
+├── graph.py          
+├── ui.py             
+└── styles.py        
 ```
 
 Each file has a single responsibility. `app.py` imports from all modules but contains no business logic itself.
@@ -226,18 +246,6 @@ streamlit run app.py
   "produces_candidates": "issue_number,issue_id,url"
 }
 ```
-
----
-
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| UI | Streamlit |
-| LLM inference | Groq (`llama-3.3-70b-versatile`) |
-| Graph algorithm | Custom BFS with field-name scoring |
-| Visualisation | Graphviz (`python-graphviz`) |
-| Tool catalogues | JSON (GitHub REST API + Google Workspace API) |
 
 ---
 
